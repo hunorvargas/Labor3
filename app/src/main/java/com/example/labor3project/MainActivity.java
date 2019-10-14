@@ -2,6 +2,7 @@ package com.example.labor3project;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView dateViewText;
     private Switch switchButton;
     private Button loginButton,datepickerButton;
+    private User newUser;
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -53,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (switchButton.isChecked()) {
+
+                    newUser.setName(usernameEditText.getText().toString());
+                    newUser.setPassword(passwordEditText.getText().toString());
+                    newUser.setDate(dateViewText.getText().toString());
+
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("Name", usernameEditText.getText().toString());
                     editor.putString("Email", emailEditText.getText().toString());
@@ -60,9 +67,13 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("Date", dateViewText.getText().toString());
                     editor.commit();
                     Toast.makeText(MainActivity.this, "Saved!", Toast.LENGTH_LONG).show();
+                    Intent addhobbyintent=new Intent(getApplicationContext(),AddhobbyActivity.class);
+                    addhobbyintent.putExtra("User", newUser);
+                    startActivity(addhobbyintent);
                 }else
                 {
                     Toast.makeText(MainActivity.this, "Not saved!", Toast.LENGTH_LONG).show();
+                    Intent addhobbyintent=new Intent(getApplicationContext(),AddhobbyActivity.class);
                 }
 
             }
