@@ -1,9 +1,11 @@
 package com.example.labor3project;
 
+import android.os.Parcel;
+
 public class User {
 
     private String Name,Password,Date,Hobby;
-
+    public User(){}
     public User(String name, String password, String date, String hobby) {
         Name = name;
         Password = password;
@@ -42,4 +44,6 @@ public class User {
     public void setHobby(String hobby) {
         Hobby = hobby;
     }
+
+
 }
