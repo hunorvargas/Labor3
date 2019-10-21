@@ -1,12 +1,13 @@
 package com.example.labor3project;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.Parcel;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -14,74 +15,52 @@ import java.util.ArrayList;
 public class AddhobbyActivity extends AppCompatActivity {
 
     ArrayList<User> users =new ArrayList<User>();
-    private DBManager dbManager;
+    Button addHobbyButton;
+    EditText editHobbytext;
     private DatabaseHelper db;
 
-    private User newuser;
-
-    public AddhobbyActivity(User newuser) {
-        this.newuser = newuser;
-    }
-
-    public User getNewuser() {
-        return newuser;
-    }
-
-    public void setNewuser(User newuser) {
-        this.newuser = newuser;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addhobby);
-        init();
-    }
-    void init(){
-    db = new DatabaseHelper(this);
+        addHobbyButton = (Button) findViewById(R.id.addHobbyButton);
+        editHobbytext = (EditText) findViewById(R.id.editHobbyText);
 
-    dbManager = new DBManager(this);
-        dbManager.open();
-    }
-    void createUser(String name, String password, String date, String hobby) {
-        User u = new User();
-        u.setPassword(password);
-        u.setDate(date);
-        u.setHobby(hobby);
-        Log.i("User",u.toString());
-        users.add(u);
-        toggleView();
-    }
-    void updateFood(User user, int position){
-        dbManager.update(user.getId(),user.getName(),food.getPrice());
+        Intent intent = getIntent();
+        User user = intent.getParcelableExtra("User");
+        String name,password,date;
 
-        // refreshing the list
-        users.set(position, user);
-
-    }
-    private void deleteFood(int position) {
-        User user = users.get(position);
-
-        // deleting the food item from db
-
-        dbManager.delete(user.getId());
-
-        // removing the food item from the list
-        users.remove(position);
-       // mAdapter.notifyItemRemoved(position);
-        toggleView();
-    }
-    private void toggleView() {
-        if (users.size() > 0) {
-            noFoodView.setVisibility(View.GONE);
-        } else {
-            noFoodView.setVisibility(View.VISIBLE);
-        }
+        name=user.getName();
+        password=user.getPassword();
+        date=user.getDate();
+        addData(name,password,date);
+        addHobby();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dbManager.close();
+    private void addHobby() {
+        addHobbyButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isInserted=db.inserthobby(editHobbytext.getText().toString());
+                        if(isInserted= true){
+                            Toast.makeText(AddhobbyActivity.this,"Hobby Inserted",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(AddhobbyActivity.this,"Hobby is not Inserted",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        );
     }
+
+    private void addData(final String name, final String password, final String date) {
+                        boolean isInserted = db.insertdata(name,password,date);
+                        if(isInserted= true){
+                            Toast.makeText(AddhobbyActivity.this,"Data Inserted",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(AddhobbyActivity.this,"Data is not Inserted",Toast.LENGTH_LONG).show();
+                        }
+                    }
+
 }
